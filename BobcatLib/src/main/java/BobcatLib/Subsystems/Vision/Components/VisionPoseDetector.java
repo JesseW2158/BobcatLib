@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.util.Units;
 import java.util.List;
 import java.util.Optional;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class VisionPoseDetector implements VisionIO {
 
@@ -104,6 +105,9 @@ public class VisionPoseDetector implements VisionIO {
                 poseEstimate.pose.toPose2d(), poseEstimate.timestampSeconds);
           }
         });
+
+    SmartDashboard.putString("Test", "hi");
+    
     return visionEstimate.get();
   }
 
