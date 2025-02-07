@@ -26,7 +26,7 @@ public class ControlledSwerve extends Command {
   private Double rotationSup;
 
   /** Flag for enabling robot-centric control. */
-  private boolean robotCentricSup;
+  private boolean fieldCentricSup;
 
   /** Configuration details parsed from a JSON controller configuration. */
   private ControllerJson controllerJson;
@@ -38,7 +38,6 @@ public class ControlledSwerve extends Command {
    * @param translationSup supplier for translation (forward/backward) control
    * @param strafeSup supplier for strafing (side-to-side) control
    * @param rotationSup supplier for rotational control
-   * @param robotCentricSup flag indicating if the drive should be robot-centric
    * @param controllerJson parsed configuration details for driver input and limits
    */
   public ControlledSwerve(
@@ -46,7 +45,6 @@ public class ControlledSwerve extends Command {
       Double translationSup,
       Double strafeSup,
       Double rotationSup,
-      boolean robotCentricSup,
       ControllerJson controllerJson) {
     this.s_Swerve = s_Swerve;
     addRequirements(s_Swerve);
@@ -54,7 +52,6 @@ public class ControlledSwerve extends Command {
     this.translationSup = translationSup;
     this.strafeSup = strafeSup;
     this.rotationSup = rotationSup;
-    this.robotCentricSup = robotCentricSup;
     this.controllerJson = controllerJson;
   }
 
@@ -65,10 +62,19 @@ public class ControlledSwerve extends Command {
   @Override
   public void execute() {
     // Apply deadband to control inputs
-    Axis translation = new Axis(translationSup, controllerJson.driver.deadband);
-    Axis strafe = new Axis(strafeSup, controllerJson.driver.deadband);
-    Axis rotation = new Axis(rotationSup, controllerJson.driver.deadband);
+    Axis translation;
+    Axis strafe;
+    Axis rotation;
 
+    if (controllerJson.isDual) {
+      translation = new Axis(translationSup, controllerJson.single.deadband);
+      strafe = new Axis(strafeSup, controllerJson.single.deadband);
+      rotation = new Axis(rotationSup, controllerJson.split_one.deadband);
+    } else {
+      translation = new Axis(translationSup, controllerJson.single.deadband);
+      strafe = new Axis(strafeSup, controllerJson.single.deadband);
+      rotation = new Axis(rotationSup, controllerJson.single.deadband);
+    }
     // Retrieve drive limits from the swerve configuration
     double maxSpeed = s_Swerve.jsonSwerve.moduleSpeedLimits.maxSpeed;
     double maxAngularVelocity = s_Swerve.jsonSwerve.moduleSpeedLimits.maxAngularVelocity;
@@ -77,7 +83,6 @@ public class ControlledSwerve extends Command {
     s_Swerve.drive(
         new Translation2d(translation.getDeadband(), strafe.getDeadband()).times(maxSpeed),
         rotation.getDeadband() * maxAngularVelocity,
-        !robotCentricSup, // Whether field-centric mode is active
         true,
         s_Swerve.getHeading(),
         s_Swerve.getPose());

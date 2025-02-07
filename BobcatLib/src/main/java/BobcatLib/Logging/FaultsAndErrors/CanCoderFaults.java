@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * Wrapper class for managing and detecting faults in a CANcoder device. Provides functionality to
@@ -103,11 +104,18 @@ public class CanCoderFaults implements FaultsWrapper {
     List<Alert> foundFaults = new ArrayList<>();
     Map<BooleanSupplier, Alert> faultChecks =
         Map.of(
-            encoder.getFault_Undervoltage()::getValue, underVoltAlert,
-            encoder.getFault_BadMagnet()::getValue, magnetOutOfRangeAlert,
-            encoder.getFault_Hardware()::getValue, HardwareAlert,
-            encoder.getFault_UnlicensedFeatureInUse()::getValue, UnlicensedFeatureInUseAlert,
-            encoder.getFault_BootDuringEnable()::getValue, bootDuringEnableAlert);
+            () -> LogError("UndervoltageAlert", encoder.getFault_Undervoltage().getValue()),
+                underVoltAlert,
+            () -> LogError("BasMagnetAlert", encoder.getFault_BadMagnet().getValue()),
+                magnetOutOfRangeAlert,
+            () -> LogError("HardwareAlert", encoder.getFault_Hardware().getValue()), HardwareAlert,
+            () ->
+                    LogError(
+                        "UnlicensedFeatureInUseAlert",
+                        encoder.getFault_UnlicensedFeatureInUse().getValue()),
+                UnlicensedFeatureInUseAlert,
+            () -> LogError("BootDuringEnableAlert", encoder.getFault_BootDuringEnable().getValue()),
+                bootDuringEnableAlert);
 
     faultChecks.forEach(
         (faultCondition, alert) -> {
@@ -119,5 +127,17 @@ public class CanCoderFaults implements FaultsWrapper {
     foundFaults.forEach(this::activateAlert);
 
     return !foundFaults.isEmpty();
+  }
+
+  /**
+   * logs the state and returns the alert state.
+   *
+   * @param key which represents the advantage scope key that is being written too.
+   * @param value from getting if the hardware has an error.
+   * @return the logged state.
+   */
+  public boolean LogError(String key, boolean value) {
+    Logger.recordOutput("Alerts/CanAndCoder/" + id + "/" + key, value);
+    return value;
   }
 }

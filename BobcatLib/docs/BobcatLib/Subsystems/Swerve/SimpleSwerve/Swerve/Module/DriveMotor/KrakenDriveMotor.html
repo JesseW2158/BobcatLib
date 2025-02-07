@@ -103,12 +103,15 @@ implements <a href="DriveWrapper.html" title="interface in BobcatLib.Subsystems.
 <div class="col-first odd-row-color"><code><a href="../Utility/ModuleConstants.html" title="class in BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.Utility">ModuleConstants</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#chosenModule" class="member-name-link">chosenModule</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../parser/ModuleLimitsJson.html" title="class in BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.parser">ModuleLimitsJson</a></code></div>
-<div class="col-second even-row-color"><code><a href="#limits" class="member-name-link">limits</a></code></div>
+<div class="col-first even-row-color"><code><a href="../../../../../../Utilities/CANDeviceDetails.html" title="class in BobcatLib.Utilities">CANDeviceDetails</a></code></div>
+<div class="col-second even-row-color"><code><a href="#details" class="member-name-link">details</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="https://api.ctr-electronics.com/phoenix6/release/java/com/ctre/phoenix6/configs/TalonFXConfiguration.html" title="class or interface in com.ctre.phoenix6.configs" class="external-link">TalonFXConfiguration</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#swerveDriveFXConfig" class="member-name-link">swerveDriveFXConfig</a></code></div>
+<div class="col-first odd-row-color"><code><a href="../parser/ModuleLimitsJson.html" title="class in BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.parser">ModuleLimitsJson</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#limits" class="member-name-link">limits</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="https://api.ctr-electronics.com/phoenix6/release/java/com/ctre/phoenix6/configs/TalonFXConfiguration.html" title="class or interface in com.ctre.phoenix6.configs" class="external-link">TalonFXConfiguration</a></code></div>
+<div class="col-second even-row-color"><code><a href="#swerveDriveFXConfig" class="member-name-link">swerveDriveFXConfig</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -120,7 +123,8 @@ implements <a href="DriveWrapper.html" title="interface in BobcatLib.Subsystems.
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.Utility.ModuleConstants,java.lang.String,BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.parser.ModuleLimitsJson)" class="member-name-link">KrakenDriveMotor</a><wbr>(int&nbsp;id,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(BobcatLib.Utilities.CANDeviceDetails,int,BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.Utility.ModuleConstants,java.lang.String,BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.parser.ModuleLimitsJson)" class="member-name-link">KrakenDriveMotor</a><wbr>(<a href="../../../../../../Utilities/CANDeviceDetails.html" title="class in BobcatLib.Utilities">CANDeviceDetails</a>&nbsp;details,
+ int&nbsp;id,
  <a href="../Utility/ModuleConstants.html" title="class in BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.Utility">ModuleConstants</a>&nbsp;chosenModule,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;canivorename,
  <a href="../parser/ModuleLimitsJson.html" title="class in BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.parser">ModuleLimitsJson</a>&nbsp;limits)</code></div>
@@ -174,6 +178,11 @@ implements <a href="DriveWrapper.html" title="interface in BobcatLib.Subsystems.
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Stops the motors properly.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateOutputs()" class="member-name-link">updateOutputs</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Updates the Motor Outputs</div>
+</div>
 </div>
 </div>
 </div>
@@ -216,6 +225,12 @@ implements <a href="DriveWrapper.html" title="interface in BobcatLib.Subsystems.
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../parser/ModuleLimitsJson.html" title="class in BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.parser">ModuleLimitsJson</a></span>&nbsp;<span class="element-name">limits</span></div>
 </section>
 </li>
+<li>
+<section class="detail" id="details">
+<h3>details</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../../../../../Utilities/CANDeviceDetails.html" title="class in BobcatLib.Utilities">CANDeviceDetails</a></span>&nbsp;<span class="element-name">details</span></div>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -225,9 +240,10 @@ implements <a href="DriveWrapper.html" title="interface in BobcatLib.Subsystems.
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(int,BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.Utility.ModuleConstants,java.lang.String,BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.parser.ModuleLimitsJson)">
+<section class="detail" id="&lt;init&gt;(BobcatLib.Utilities.CANDeviceDetails,int,BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.Utility.ModuleConstants,java.lang.String,BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.parser.ModuleLimitsJson)">
 <h3>KrakenDriveMotor</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">KrakenDriveMotor</span><wbr><span class="parameters">(int&nbsp;id,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">KrakenDriveMotor</span><wbr><span class="parameters">(<a href="../../../../../../Utilities/CANDeviceDetails.html" title="class in BobcatLib.Utilities">CANDeviceDetails</a>&nbsp;details,
+ int&nbsp;id,
  <a href="../Utility/ModuleConstants.html" title="class in BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.Utility">ModuleConstants</a>&nbsp;chosenModule,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;canivorename,
  <a href="../parser/ModuleLimitsJson.html" title="class in BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.parser">ModuleLimitsJson</a>&nbsp;limits)</span></div>
@@ -241,6 +257,17 @@ implements <a href="DriveWrapper.html" title="interface in BobcatLib.Subsystems.
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="updateOutputs()">
+<h3>updateOutputs</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateOutputs</span>()</div>
+<div class="block">Updates the Motor Outputs</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="DriveWrapper.html#updateOutputs()">updateOutputs</a></code>&nbsp;in interface&nbsp;<code><a href="DriveWrapper.html" title="interface in BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.DriveMotor">DriveWrapper</a></code></dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="configDriveMotor()">
 <h3>configDriveMotor</h3>

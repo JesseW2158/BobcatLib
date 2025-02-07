@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
-public class WpiPoseEstimator implements PoseLib {
+public class WpiPoseEstimator {
   public final SwerveDrivePoseEstimator swerveDrivePoseEstimator;
 
   public WpiPoseEstimator(

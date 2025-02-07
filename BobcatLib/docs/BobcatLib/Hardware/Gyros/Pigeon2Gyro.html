@@ -115,6 +115,9 @@ implements <a href="GyroIO.html" title="interface in BobcatLib.Hardware.Gyros">G
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="#lastConfig" class="member-name-link">lastConfig</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#robotName" class="member-name-link">robotName</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -126,12 +129,13 @@ implements <a href="GyroIO.html" title="interface in BobcatLib.Hardware.Gyros">G
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">Pigeon2Gyro</a>()</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String)" class="member-name-link">Pigeon2Gyro</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;robotName)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Default constructor that loads the gyro configuration from a file and applies the
  configuration.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(BobcatLib.Utilities.CANDeviceDetails,boolean)" class="member-name-link">Pigeon2Gyro</a><wbr>(<a href="../../Utilities/CANDeviceDetails.html" title="class in BobcatLib.Utilities">CANDeviceDetails</a>&nbsp;details,
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.lang.String,BobcatLib.Utilities.CANDeviceDetails,boolean)" class="member-name-link">Pigeon2Gyro</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;robotName,
+ <a href="../../Utilities/CANDeviceDetails.html" title="class in BobcatLib.Utilities">CANDeviceDetails</a>&nbsp;details,
  boolean&nbsp;enableGyro)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Constructs a Pigeon2Gyro instance with the specified CAN device details and enables the gyro.</div>
@@ -229,6 +233,12 @@ implements <a href="GyroIO.html" title="interface in BobcatLib.Hardware.Gyros">G
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Parser/GyroJson.html" title="class in BobcatLib.Hardware.Gyros.Parser">GyroJson</a></span>&nbsp;<span class="element-name">jsonGyro</span></div>
 </section>
 </li>
+<li>
+<section class="detail" id="robotName">
+<h3>robotName</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">robotName</span></div>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -238,9 +248,10 @@ implements <a href="GyroIO.html" title="interface in BobcatLib.Hardware.Gyros">G
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(BobcatLib.Utilities.CANDeviceDetails,boolean)">
+<section class="detail" id="&lt;init&gt;(java.lang.String,BobcatLib.Utilities.CANDeviceDetails,boolean)">
 <h3>Pigeon2Gyro</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Pigeon2Gyro</span><wbr><span class="parameters">(<a href="../../Utilities/CANDeviceDetails.html" title="class in BobcatLib.Utilities">CANDeviceDetails</a>&nbsp;details,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Pigeon2Gyro</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;robotName,
+ <a href="../../Utilities/CANDeviceDetails.html" title="class in BobcatLib.Utilities">CANDeviceDetails</a>&nbsp;details,
  boolean&nbsp;enableGyro)</span></div>
 <div class="block">Constructs a Pigeon2Gyro instance with the specified CAN device details and enables the gyro.</div>
 <dl class="notes">
@@ -251,9 +262,9 @@ implements <a href="GyroIO.html" title="interface in BobcatLib.Hardware.Gyros">G
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;()">
+<section class="detail" id="&lt;init&gt;(java.lang.String)">
 <h3>Pigeon2Gyro</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Pigeon2Gyro</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Pigeon2Gyro</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;robotName)</span></div>
 <div class="block">Default constructor that loads the gyro configuration from a file and applies the
  configuration.</div>
 </section>

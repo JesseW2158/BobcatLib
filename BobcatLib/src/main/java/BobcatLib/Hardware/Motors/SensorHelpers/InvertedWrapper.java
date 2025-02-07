@@ -47,4 +47,12 @@ public class InvertedWrapper {
   public boolean asREV() {
     return isInverted;
   }
+  /**
+   * Returns Inverted Wrapper as Thrifty Equivalent
+   *
+   * @return boolean
+   */
+  public boolean asThrifty() {
+    return isInverted;
+  }
 }

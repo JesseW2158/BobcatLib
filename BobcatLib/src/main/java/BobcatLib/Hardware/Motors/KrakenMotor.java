@@ -3,7 +3,7 @@ package BobcatLib.Hardware.Motors;
 import BobcatLib.Hardware.Motors.SensorHelpers.InvertedWrapper;
 import BobcatLib.Hardware.Motors.SensorHelpers.NeutralModeWrapper;
 import BobcatLib.Hardware.Motors.Utility.CTRE.PidControllerWrapper;
-import BobcatLib.Logging.FaultsAndErrors.TalonFXFaults;
+import BobcatLib.Logging.FaultsAndErrors.KrakenFaults;
 import BobcatLib.Utilities.CANDeviceDetails;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
@@ -35,7 +35,7 @@ public class KrakenMotor implements MotorIO {
   private final PositionVoltage motorPositionVoltage = new PositionVoltage(0);
   private final VelocityTorqueCurrentFOC motorVelocityTorqueFOC = new VelocityTorqueCurrentFOC(0);
   private final PositionTorqueCurrentFOC motorPositionTorqueFOC = new PositionTorqueCurrentFOC(0);
-  private TalonFXFaults faults;
+  private KrakenFaults faults;
   private CANDeviceDetails details;
   private MotorConfigs config;
 
@@ -62,7 +62,7 @@ public class KrakenMotor implements MotorIO {
       mMotor = new TalonFX(id, busName);
     }
     configMotor(config);
-    faults = new TalonFXFaults(mMotor, motorCanId);
+    faults = new KrakenFaults(mMotor, motorCanId);
   }
 
   /**

@@ -3,6 +3,7 @@ package BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.SteerMotor;
 import BobcatLib.Logging.Alert;
 import BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.Utility.ModuleConstants;
 import BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.parser.ModuleLimitsJson;
+import BobcatLib.Utilities.CANDeviceDetails;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -14,9 +15,11 @@ import com.revrobotics.spark.config.ClosedLoopConfig.ClosedLoopSlot;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.math.geometry.Rotation2d;
+import org.littletonrobotics.junction.Logger;
 
 public class VortexSteerMotor implements SteerWrapper {
-  private SparkFlex motor;
+  private SparkFlex mAngleMotor;
   private RelativeEncoder encoder;
   /** An {@link Alert} for if the CAN ID is greater than 40. */
   public static final Alert canIdWarning =
@@ -30,17 +33,48 @@ public class VortexSteerMotor implements SteerWrapper {
   private SparkMaxConfig motorConfig;
 
   private SparkClosedLoopController closedLoopController;
+  public CANDeviceDetails details;
 
-  public VortexSteerMotor(int id, ModuleConstants chosenModule, ModuleLimitsJson limits) {
+  public VortexSteerMotor(
+      CANDeviceDetails details, int id, ModuleConstants chosenModule, ModuleLimitsJson limits) {
+    this.details = details;
     if (id >= 40) {
       canIdWarning.set(true);
     }
     this.chosenModule = chosenModule;
     this.limits = limits;
-    motor = new SparkFlex(id, MotorType.kBrushless);
-    encoder = motor.getEncoder();
+    mAngleMotor = new SparkFlex(id, MotorType.kBrushless);
+    encoder = mAngleMotor.getEncoder();
     configAngleMotor();
-    motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+    mAngleMotor.configure(
+        motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+  }
+  /** Updates the Motor Outputs */
+  public void updateOutputs() {
+    Logger.recordOutput(
+        details.getSubsysemName()
+            + "/"
+            + details.getBus()
+            + "/"
+            + details.getDeviceNumber()
+            + "/Angle/MotorVoltage",
+        mAngleMotor.getBusVoltage());
+    Logger.recordOutput(
+        details.getSubsysemName()
+            + "/"
+            + details.getBus()
+            + "/"
+            + details.getDeviceNumber()
+            + "/Angle/RelativePosition",
+        Rotation2d.fromRotations(getPosition()));
+    Logger.recordOutput(
+        details.getSubsysemName()
+            + "/"
+            + details.getBus()
+            + "/"
+            + details.getDeviceNumber()
+            + "/Angle/Velocity",
+        encoder.getVelocity());
   }
 
   public void configAngleMotor() {
@@ -97,6 +131,6 @@ public class VortexSteerMotor implements SteerWrapper {
 
   /** Stops the motors properly. */
   public void stopMotor() {
-    motor.stopMotor();
+    mAngleMotor.stopMotor();
   }
 }

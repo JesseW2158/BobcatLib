@@ -3,9 +3,12 @@ package BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.SteerMotor;
 import BobcatLib.Logging.Alert;
 import BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.Utility.ModuleConstants;
 import BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.parser.ModuleLimitsJson;
+import BobcatLib.Utilities.CANDeviceDetails;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import edu.wpi.first.math.geometry.Rotation2d;
+import org.littletonrobotics.junction.Logger;
 
 public class FalconSteerMotor implements SteerWrapper {
   private TalonFX mAngleMotor;
@@ -21,9 +24,15 @@ public class FalconSteerMotor implements SteerWrapper {
 
   private ModuleConstants chosenModule;
   public ModuleLimitsJson limits;
+  public CANDeviceDetails details;
 
   public FalconSteerMotor(
-      int id, ModuleConstants chosenModule, String canivorename, ModuleLimitsJson limits) {
+      CANDeviceDetails details,
+      int id,
+      ModuleConstants chosenModule,
+      String canivorename,
+      ModuleLimitsJson limits) {
+    this.details = details;
     if (id >= 40) {
       canIdWarning.set(true);
     }
@@ -38,6 +47,34 @@ public class FalconSteerMotor implements SteerWrapper {
 
     configAngleMotor();
     mAngleMotor.getConfigurator().apply(swerveAngleFXConfig);
+  }
+
+  /** Updates the Motor Outputs */
+  public void updateOutputs() {
+    Logger.recordOutput(
+        details.getSubsysemName()
+            + "/"
+            + details.getBus()
+            + "/"
+            + details.getDeviceNumber()
+            + "/Angle/MotorVoltage",
+        mAngleMotor.getMotorVoltage().getValueAsDouble());
+    Logger.recordOutput(
+        details.getSubsysemName()
+            + "/"
+            + details.getBus()
+            + "/"
+            + details.getDeviceNumber()
+            + "/Angle/RelativePosition",
+        Rotation2d.fromRotations(getPosition()));
+    Logger.recordOutput(
+        details.getSubsysemName()
+            + "/"
+            + details.getBus()
+            + "/"
+            + details.getDeviceNumber()
+            + "/Angle/Velocity",
+        mAngleMotor.getVelocity().getValueAsDouble());
   }
 
   public void configAngleMotor() {

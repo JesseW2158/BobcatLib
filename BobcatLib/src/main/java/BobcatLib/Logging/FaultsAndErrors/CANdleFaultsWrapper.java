@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * Wrapper class for monitoring and handling faults in a CANdle device. Provides functionality to
@@ -104,5 +105,17 @@ public class CANdleFaultsWrapper implements FaultsWrapper {
     foundFaults.forEach(this::activateAlert);
 
     return !foundFaults.isEmpty();
+  }
+
+  /**
+   * logs the state and returns the alert state.
+   *
+   * @param key which represents the advantage scope key that is being written too.
+   * @param value from getting if the hardware has an error.
+   * @return the logged state.
+   */
+  public boolean LogError(String key, boolean value) {
+    Logger.recordOutput("Alerts/CANDle/" + id + "/" + key, value);
+    return value;
   }
 }

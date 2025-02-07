@@ -14,6 +14,22 @@ public class CANDeviceDetails {
   private final Manufacturer manufacturer;
   private final int deviceNumber;
   private final String bus;
+  private final String subsystemName;
+
+  /**
+   * CAN Device Id constructor given the device number, bus name , and manufacturer type.
+   *
+   * @param deviceNumber
+   * @param bus
+   * @param manufacturer
+   */
+  public CANDeviceDetails(
+      int deviceNumber, String bus, Manufacturer manufacturer, String subsystemName) {
+    this.deviceNumber = deviceNumber;
+    this.bus = bus;
+    this.manufacturer = manufacturer;
+    this.subsystemName = subsystemName;
+  }
 
   /**
    * CAN Device Id constructor given the device number, bus name , and manufacturer type.
@@ -26,6 +42,7 @@ public class CANDeviceDetails {
     this.deviceNumber = deviceNumber;
     this.bus = bus;
     this.manufacturer = manufacturer;
+    this.subsystemName = "";
   }
 
   /**
@@ -33,9 +50,22 @@ public class CANDeviceDetails {
    * string)
    *
    * @param deviceNumber
+   * @param manufacturer
    */
   public CANDeviceDetails(int deviceNumber, Manufacturer manufacturer) {
     this(deviceNumber, "", manufacturer);
+  }
+
+  /**
+   * CAN Device Id constructor given only the device number Uses the default bus name of "" (empty
+   * string)
+   *
+   * @param deviceNumber
+   * @param manufacturer
+   * @param subsystemName
+   */
+  public CANDeviceDetails(int deviceNumber, Manufacturer manufacturer, String subsystemName) {
+    this(deviceNumber, "", manufacturer, subsystemName);
   }
 
   /**
@@ -75,9 +105,19 @@ public class CANDeviceDetails {
     return bus;
   }
 
+  /**
+   * Gets the Subsystem this is associated with.
+   *
+   * @return Subsystem this is associated with.
+   */
+  public String getSubsysemName() {
+    return subsystemName;
+  }
+
   public boolean equals(CANDeviceDetails other) {
     return other.deviceNumber == deviceNumber
         && other.bus == bus
-        && other.manufacturer == manufacturer;
+        && other.manufacturer == manufacturer
+        && other.subsystemName == subsystemName;
   }
 }

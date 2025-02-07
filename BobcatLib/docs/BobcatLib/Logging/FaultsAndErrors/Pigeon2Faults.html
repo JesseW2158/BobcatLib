@@ -198,6 +198,12 @@ implements <a href="FaultsWrapper.html" title="interface in BobcatLib.Logging.Fa
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Checks if any fault has occurred for the Pigeon2 IMU.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#LogError(java.lang.String,boolean)" class="member-name-link">LogError</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
+ boolean&nbsp;value)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">logs the state and returns the alert state.</div>
+</div>
 </div>
 </div>
 </div>
@@ -393,6 +399,23 @@ implements <a href="FaultsWrapper.html" title="interface in BobcatLib.Logging.Fa
 <dd><code><a href="FaultsWrapper.html#hasFaultOccured()">hasFaultOccured</a></code>&nbsp;in interface&nbsp;<code><a href="FaultsWrapper.html" title="interface in BobcatLib.Logging.FaultsAndErrors">FaultsWrapper</a></code></dd>
 <dt>Returns:</dt>
 <dd><code>true</code> if at least one fault is detected; otherwise, <code>false</code>.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="LogError(java.lang.String,boolean)">
+<h3>LogError</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">LogError</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
+ boolean&nbsp;value)</span></div>
+<div class="block">logs the state and returns the alert state.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="FaultsWrapper.html#LogError(java.lang.String,boolean)">LogError</a></code>&nbsp;in interface&nbsp;<code><a href="FaultsWrapper.html" title="interface in BobcatLib.Logging.FaultsAndErrors">FaultsWrapper</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>key</code> - which represents the advantage scope key that is being written too.</dd>
+<dd><code>value</code> - from getting if the hardware has an error.</dd>
+<dt>Returns:</dt>
+<dd>the logged state.</dd>
 </dl>
 </section>
 </li>

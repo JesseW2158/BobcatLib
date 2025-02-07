@@ -188,6 +188,16 @@ implements <a href="EncoderIO.html" title="interface in BobcatLib.Hardware.Encod
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Retrieves the absolute position of the encoder.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Rotation2d.html" title="class or interface in edu.wpi.first.math.geometry" class="external-link">Rotation2d</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRelativePosition()" class="member-name-link">getRelativePosition</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Retrieves the relative position of the encoder.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateInputs(BobcatLib.Hardware.Encoders.EncoderIO.EncoderIOInputs)" class="member-name-link">updateInputs</a><wbr>(<a href="EncoderIO.EncoderIOInputs.html" title="class in BobcatLib.Hardware.Encoders">EncoderIO.EncoderIOInputs</a>&nbsp;inputs)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Updates the Encoder inputs.</div>
+</div>
 </div>
 </div>
 </div>
@@ -196,7 +206,7 @@ implements <a href="EncoderIO.html" title="interface in BobcatLib.Hardware.Encod
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-BobcatLib.Hardware.Encoders.EncoderIO">Methods inherited from interface&nbsp;BobcatLib.Hardware.Encoders.<a href="EncoderIO.html" title="interface in BobcatLib.Hardware.Encoders">EncoderIO</a></h3>
-<code><a href="EncoderIO.html#periodic()">periodic</a>, <a href="EncoderIO.html#periodic(BobcatLib.Hardware.Encoders.CanCoderWrapper)">periodic</a>, <a href="EncoderIO.html#periodic(BobcatLib.Hardware.Encoders.ThriftyAbsoluteEncoder)">periodic</a>, <a href="EncoderIO.html#updateInputs(BobcatLib.Hardware.Encoders.EncoderIO.EncoderIOInputs)">updateInputs</a></code></div>
+<code><a href="EncoderIO.html#periodic()">periodic</a>, <a href="EncoderIO.html#periodic(BobcatLib.Hardware.Encoders.CanCoderWrapper)">periodic</a>, <a href="EncoderIO.html#periodic(BobcatLib.Hardware.Encoders.ThriftyAbsoluteEncoder)">periodic</a></code></div>
 </section>
 </li>
 </ul>
@@ -276,6 +286,19 @@ implements <a href="EncoderIO.html" title="interface in BobcatLib.Hardware.Encod
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="updateInputs(BobcatLib.Hardware.Encoders.EncoderIO.EncoderIOInputs)">
+<h3>updateInputs</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateInputs</span><wbr><span class="parameters">(<a href="EncoderIO.EncoderIOInputs.html" title="class in BobcatLib.Hardware.Encoders">EncoderIO.EncoderIOInputs</a>&nbsp;inputs)</span></div>
+<div class="block">Updates the Encoder inputs.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="EncoderIO.html#updateInputs(BobcatLib.Hardware.Encoders.EncoderIO.EncoderIOInputs)">updateInputs</a></code>&nbsp;in interface&nbsp;<code><a href="EncoderIO.html" title="interface in BobcatLib.Hardware.Encoders">EncoderIO</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>inputs</code> - The EncoderIOInputs object to populate with motor data.</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="configAbsEncoder()">
 <h3>configAbsEncoder</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">configAbsEncoder</span>()</div>
@@ -298,6 +321,18 @@ implements <a href="EncoderIO.html" title="interface in BobcatLib.Hardware.Encod
 <dt>Returns:</dt>
 <dd>The absolute position of the encoder, as a rotation value in the range (-0.5 to
      0.999999).</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getRelativePosition()">
+<h3>getRelativePosition</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Rotation2d.html" title="class or interface in edu.wpi.first.math.geometry" class="external-link">Rotation2d</a></span>&nbsp;<span class="element-name">getRelativePosition</span>()</div>
+<div class="block">Retrieves the relative position of the encoder.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>The relative position of the encoder, as a rotation value Minimum Value: -16384.0
+     Maximum Value: 16383.999755859375</dd>
 </dl>
 </section>
 </li>

@@ -14,34 +14,24 @@ import java.io.IOException;
  */
 public class OI {
   /** The driver joystick. */
-  public final Joystick driver;
+  public Joystick single;
+
+  /** The driver joystick. */
+  public Joystick split_two;
 
   /** Driver Buttons */
-  public final Trigger robotCentric;
+  public Trigger fieldCentric;
 
   /** Driver Zero Gyros */
-  public final Trigger zeroGyro;
-
-  /** Spatial Trigger */
-  public final Trigger spatialTrigger;
+  public Trigger zeroGyro;
 
   /* controller configuration */
   public ControllerJson controllerJson;
 
   /** The wrapper for the driver controller, supporting different controller types. */
-  public ControllerWrapper driver_controller;
+  public ControllerWrapper single_controller;
 
-  /** Trigger for the D-Pad forward button. */
-  public Trigger dpadForwardBtn;
-
-  /** Trigger for the D-Pad backward button. */
-  public Trigger dpadBackBtn;
-
-  /** Trigger for the D-Pad left button. */
-  public Trigger dpadLeftBtn;
-
-  /** Trigger for the D-Pad right button. */
-  public Trigger dpadRightBtn;
+  public ControllerWrapper split_two_controller;
 
   private String robotName;
   /**
@@ -51,39 +41,64 @@ public class OI {
   public OI(String robotName) {
     this.robotName = robotName;
     loadConfigurationFromFile();
-    int driverPort = controllerJson.driver.id;
-    String type = controllerJson.driver.type;
+    int driverPort = controllerJson.single.id;
+    String type = controllerJson.single.type;
     /* USB Xbox Controllers */
-    driver = new Joystick(driverPort);
+    single = new Joystick(driverPort);
+    split_two = single;
     /* Driver Buttons */
-    init(type, driverPort);
-    robotCentric = driver_controller.getLeftBumper();
-    zeroGyro = driver_controller.getRightBumper();
-    spatialTrigger = driver_controller.getLeftTrigger();
-    dpadForwardBtn = driver_controller.getDPadTriggerUp();
-    dpadBackBtn = driver_controller.getDPadTriggerDown();
-    dpadLeftBtn = driver_controller.getDPadTriggerLeft();
-    dpadRightBtn = driver_controller.getDPadTriggerRight();
+    single_controller = init(type, driverPort);
+    split_two_controller = single_controller;
+    if (controllerJson.isDual) {
+      driverPort = controllerJson.split_one.id;
+      type = controllerJson.split_one.type;
+      /* USB Xbox Controllers */
+      split_two = new Joystick(driverPort);
+      /* Driver Buttons */
+      single_controller = init(type, driverPort);
+    }
   }
 
-  public void init(String type, int driverPort) {
+  public ControllerWrapper init(String type, int driverPort) {
+    ControllerWrapper tmp;
     switch (type) {
       case "xbox":
-        driver_controller = new XboxControllerWrapper(driverPort);
+        tmp = new XboxControllerWrapper(driverPort);
+        fieldCentric = tmp.getAorCross();
+        zeroGyro = tmp.getBorCircle();
         break;
       case "ps4":
-        driver_controller = new PS4ControllerWrapper(driverPort);
+        tmp = new PS4ControllerWrapper(driverPort);
+        fieldCentric = tmp.getAorCross();
+        zeroGyro = tmp.getBorCircle();
+        break;
       case "ps5":
-        driver_controller = new PS5ControllerWrapper(driverPort);
+        tmp = new PS5ControllerWrapper(driverPort);
+        fieldCentric = tmp.getAorCross();
+        zeroGyro = tmp.getBorCircle();
+        break;
       case "ruffy":
-        driver_controller = new Ruffy(driverPort);
+        tmp = new Ruffy(driverPort);
+        fieldCentric = tmp.getTopButton();
+        zeroGyro = tmp.getTopButton();
+        break;
       case "logitech":
-        driver_controller = new Logitech(driverPort);
+        tmp = new Logitech(driverPort);
+        fieldCentric = tmp.getAorCross();
+        zeroGyro = tmp.getBorCircle();
+        break;
       case "eightbitdo":
-        driver_controller = new EightBitDo(driverPort);
+        tmp = new EightBitDo(driverPort);
+        fieldCentric = tmp.getAorCross();
+        zeroGyro = tmp.getBorCircle();
+        break;
       default:
-        driver_controller = new XboxControllerWrapper(driverPort);
+        tmp = new XboxControllerWrapper(driverPort);
+        fieldCentric = tmp.getAorCross();
+        zeroGyro = tmp.getBorCircle();
+        break;
     }
+    return tmp;
   }
 
   /**
@@ -114,7 +129,7 @@ public class OI {
    * @return double
    */
   public double getLeftYValue() {
-    return driver_controller.getLeftYAxis();
+    return single_controller.getLeftYAxis();
   }
 
   /**
@@ -123,7 +138,7 @@ public class OI {
    * @return double
    */
   public double getLeftXValue() {
-    return driver_controller.getLeftXAxis();
+    return single_controller.getLeftXAxis();
   }
 
   /**
@@ -132,6 +147,20 @@ public class OI {
    * @return double
    */
   public double getRightXValue() {
-    return driver_controller.getRightXAxis();
+    if (controllerJson.isDual) {
+      return split_two_controller.getRightXAxis();
+    }
+    return single_controller.getRightXAxis();
+  }
+  /**
+   * Gets Driver RightY Axis
+   *
+   * @return double
+   */
+  public double getRightYValue() {
+    if (controllerJson.isDual) {
+      return split_two_controller.getRightYAxis();
+    }
+    return single_controller.getRightYAxis();
   }
 }

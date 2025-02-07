@@ -108,19 +108,19 @@ public class SwerveModuleReal implements SwerveModuleIO {
     CANDeviceDetails details;
     switch (type) {
       case "cancoder":
-        details = new CANDeviceDetails(canId, Manufacturer.Ctre);
+        details = new CANDeviceDetails(canId, Manufacturer.Ctre, "Swerve/Module" + moduleNumber);
         angleAbsEncoder =
             new BaseEncoder(
                 new CanCoderWrapper(
                     details, chosenModule.encoderConstants, jsonModule.encoder.canbus));
         break;
       case "thrifty":
-        details = new CANDeviceDetails(canId, Manufacturer.Ctre);
+        details = new CANDeviceDetails(canId, Manufacturer.Thrifty, "Swerve/Module" + moduleNumber);
         angleAbsEncoder =
             new BaseEncoder(new ThriftyAbsoluteEncoder(details, chosenModule.encoderConstants));
         break;
       default:
-        details = new CANDeviceDetails(canId, Manufacturer.Ctre);
+        details = new CANDeviceDetails(canId, Manufacturer.Ctre, "Swerve/Module" + moduleNumber);
         angleAbsEncoder =
             new BaseEncoder(
                 new CanCoderWrapper(
@@ -129,49 +129,68 @@ public class SwerveModuleReal implements SwerveModuleIO {
   }
 
   public void assignSteerMotor(String type, int canId) {
+    CANDeviceDetails details;
     switch (type) {
       case "KrakenX60":
+        details = new CANDeviceDetails(canId, Manufacturer.Ctre, "Swerve/Module" + moduleNumber);
         mAngleMotor =
-            new KrakenSteerMotor(canId, chosenModule, jsonModule.angle.canbus, swerveLimits);
+            new KrakenSteerMotor(
+                details, canId, chosenModule, jsonModule.angle.canbus, swerveLimits);
         break;
       case "Falcon500":
+        details = new CANDeviceDetails(canId, Manufacturer.Ctre, "Swerve/Module" + moduleNumber);
         mAngleMotor =
-            new FalconSteerMotor(canId, chosenModule, jsonModule.angle.canbus, swerveLimits);
+            new FalconSteerMotor(
+                details, canId, chosenModule, jsonModule.angle.canbus, swerveLimits);
         break;
       case "Neo550":
-        mAngleMotor = new Neo550SteerMotor(canId, chosenModule, swerveLimits);
+        details = new CANDeviceDetails(canId, Manufacturer.Rev, "Swerve/Module" + moduleNumber);
+        mAngleMotor = new Neo550SteerMotor(details, canId, chosenModule, swerveLimits);
         break;
       case "Neo":
-        mAngleMotor = new NeoSteerMotor(canId, chosenModule, swerveLimits);
+        details = new CANDeviceDetails(canId, Manufacturer.Rev, "Swerve/Module" + moduleNumber);
+        mAngleMotor = new NeoSteerMotor(details, canId, chosenModule, swerveLimits);
         break;
       case "Vortex":
-        mAngleMotor = new VortexSteerMotor(canId, chosenModule, swerveLimits);
+        details = new CANDeviceDetails(canId, Manufacturer.Rev, "Swerve/Module" + moduleNumber);
+        mAngleMotor = new VortexSteerMotor(details, canId, chosenModule, swerveLimits);
         break;
       default:
+        details = new CANDeviceDetails(canId, Manufacturer.Ctre, "Swerve/Module" + moduleNumber);
         mAngleMotor =
-            new KrakenSteerMotor(canId, chosenModule, jsonModule.angle.canbus, swerveLimits);
+            new KrakenSteerMotor(
+                details, canId, chosenModule, jsonModule.angle.canbus, swerveLimits);
     }
   }
 
   public void assignDriveMotor(String type, int canId) {
+    CANDeviceDetails details;
     switch (type) {
       case "KrakenX60":
+        details = new CANDeviceDetails(canId, Manufacturer.Ctre, "Swerve/Module" + moduleNumber);
         mDriveMotor =
-            new KrakenDriveMotor(canId, chosenModule, jsonModule.drive.canbus, swerveLimits);
+            new KrakenDriveMotor(
+                details, canId, chosenModule, jsonModule.drive.canbus, swerveLimits);
         break;
       case "Falcon500":
+        details = new CANDeviceDetails(canId, Manufacturer.Ctre, "Swerve/Module" + moduleNumber);
         mDriveMotor =
-            new FalconDriveMotor(canId, chosenModule, jsonModule.drive.canbus, swerveLimits);
+            new FalconDriveMotor(
+                details, canId, chosenModule, jsonModule.drive.canbus, swerveLimits);
         break;
       case "Neo":
-        mDriveMotor = new NeoDriveMotor(canId, chosenModule, swerveLimits);
+        details = new CANDeviceDetails(canId, Manufacturer.Rev, "Swerve/Module" + moduleNumber);
+        mDriveMotor = new NeoDriveMotor(details, canId, chosenModule, swerveLimits);
         break;
       case "Vortex":
-        mDriveMotor = new VortexDriveMotor(canId, chosenModule, swerveLimits);
+        details = new CANDeviceDetails(canId, Manufacturer.Rev, "Swerve/Module" + moduleNumber);
+        mDriveMotor = new VortexDriveMotor(details, canId, chosenModule, swerveLimits);
         break;
       default:
+        details = new CANDeviceDetails(canId, Manufacturer.Rev, "Swerve/Module" + moduleNumber);
         mDriveMotor =
-            new KrakenDriveMotor(canId, chosenModule, jsonModule.drive.canbus, swerveLimits);
+            new KrakenDriveMotor(
+                details, canId, chosenModule, jsonModule.drive.canbus, swerveLimits);
     }
   }
 

@@ -6,7 +6,6 @@ import BobcatLib.Hardware.Gyros.Pigeon2Gyro;
 import BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.SwerveModule;
 import BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.SwerveModuleReal;
 import BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.Utility.PIDConstants;
-import BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.Utility.Pose.PoseLib;
 import BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.Utility.Pose.WpiPoseEstimator;
 import BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.parser.ModuleLimitsJson;
 import BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Parser.BaseJson;
@@ -53,8 +52,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.Logger;
 
 public class SwerveDrive extends SubsystemBase implements SysidCompatibleSwerve, AutomatedSwerve {
@@ -73,13 +70,14 @@ public class SwerveDrive extends SubsystemBase implements SysidCompatibleSwerve,
 
   public PIDConstants pidTranslation;
   public PIDConstants pidRotation;
-  static final Lock odometryLock = new ReentrantLock();
-  public PoseLib swerveDrivePoseEstimator;
+  public WpiPoseEstimator swerveDrivePoseEstimator;
   private Alliance team;
   Matrix<N3, N1> visionStdDevs;
   Matrix<N3, N1> stateStdDevs;
   private String robotName;
   private final PIDController autoAlignPID;
+
+  public boolean fieldCentric = false;
   /*
    * Swerve Kinematics
    * No need to ever change this unless you are not doing a traditional
@@ -127,7 +125,7 @@ public class SwerveDrive extends SubsystemBase implements SysidCompatibleSwerve,
       gyro = new BaseGyro("Swerve-Gyro", new GyroSim());
       mSwerveMods = new SwerveModule[] {};
     } else {
-      gyro = new BaseGyro("Swerve-Gyro", new Pigeon2Gyro());
+      gyro = new BaseGyro("Swerve-Gyro", new Pigeon2Gyro(robotName));
       mSwerveMods =
           new SwerveModule[] {
             new SwerveModule(new SwerveModuleReal(0, jsonSwerve.moduleSpeedLimits, robotName), 0),
@@ -208,7 +206,7 @@ public class SwerveDrive extends SubsystemBase implements SysidCompatibleSwerve,
             new SwerveModule(new SwerveModuleReal(3, jsonSwerve.moduleSpeedLimits, robotName), 3)
           };
 
-      gyro = new BaseGyro("Swerve-Gyro", new Pigeon2Gyro());
+      gyro = new BaseGyro("Swerve-Gyro", new Pigeon2Gyro(robotName));
     }
     Timer.delay(1);
     resetModulesToAbsolute();
@@ -346,7 +344,7 @@ public class SwerveDrive extends SubsystemBase implements SysidCompatibleSwerve,
     Rotation2d currentHeading = new Rotation2d();
     Pose2d currentPose = new Pose2d();
     Command driveCmd =
-        new InstantCommand(() -> drive(translation, 0, true, false, currentHeading, currentPose));
+        new InstantCommand(() -> drive(translation, 0, false, currentHeading, currentPose));
     return driveCmd;
   }
 
@@ -369,22 +367,23 @@ public class SwerveDrive extends SubsystemBase implements SysidCompatibleSwerve,
    *
    * @param translation
    * @param rotation
-   * @param fieldRelative
    * @param isOpenLoop
+   * @param currentHeading
+   * @param currentPose
    */
   public void drive(
       Translation2d translation,
       double rotation,
-      boolean fieldRelative,
       boolean isOpenLoop,
       Rotation2d currentHeading,
       Pose2d currentPose) {
-    currentHeading = getHeading();
+    Logger.recordOutput("Swerve/FieldCentric", fieldCentric);
+    currentHeading = getGyroYaw();
     currentPose = getPose();
     if (Constants.SwerveConstants.firstOrderDriving) {
-      drive1stOrder(translation, rotation, fieldRelative, isOpenLoop, currentHeading, currentPose);
+      drive1stOrder(translation, rotation, isOpenLoop, currentHeading, currentPose);
     } else {
-      drive2ndOrder(translation, rotation, fieldRelative, isOpenLoop, currentHeading, currentPose);
+      drive2ndOrder(translation, rotation, isOpenLoop, currentHeading, currentPose);
     }
   }
 
@@ -392,14 +391,13 @@ public class SwerveDrive extends SubsystemBase implements SysidCompatibleSwerve,
    * drive the swerve with 1st or 2nd order. But with an auto align target rotation.
    *
    * @param translation
-   * @param fieldRelative
    * @param isOpenLoop
    * @param currentHeading rotation2d of the robots current heading
+   * @param currentPose
    * @param TargetYaw in degrees
    */
   public void driveWithAutoAlign(
       Translation2d translation,
-      boolean fieldRelative,
       boolean isOpenLoop,
       Rotation2d currentHeading,
       Pose2d currentPose,
@@ -410,9 +408,9 @@ public class SwerveDrive extends SubsystemBase implements SysidCompatibleSwerve,
     double rotation = autoAlignPID.calculate(getGyroYaw().getDegrees(), TargetYaw);
 
     if (Constants.SwerveConstants.firstOrderDriving) {
-      drive1stOrder(translation, rotation, fieldRelative, isOpenLoop, currentHeading, currentPose);
+      drive1stOrder(translation, rotation, isOpenLoop, currentHeading, currentPose);
     } else {
-      drive2ndOrder(translation, rotation, fieldRelative, isOpenLoop, currentHeading, currentPose);
+      drive2ndOrder(translation, rotation, isOpenLoop, currentHeading, currentPose);
     }
   }
 
@@ -421,22 +419,28 @@ public class SwerveDrive extends SubsystemBase implements SysidCompatibleSwerve,
    *
    * @param translation
    * @param rotation
-   * @param fieldRelative
    * @param isOpenLoop
+   * @param currentHeading
+   * @param currentPose
    */
   public void drive1stOrder(
       Translation2d translation,
       double rotation,
-      boolean fieldRelative,
       boolean isOpenLoop,
       Rotation2d currentHeading,
       Pose2d currentPose) {
-    SwerveModuleState[] swerveModuleStates =
-        swerveKinematics.toSwerveModuleStates(
-            fieldRelative
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                    translation.getX(), translation.getY(), rotation, currentHeading)
-                : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
+    SwerveModuleState[] swerveModuleStates;
+
+    if (fieldCentric) {
+      swerveModuleStates =
+          swerveKinematics.toSwerveModuleStates(
+              ChassisSpeeds.fromFieldRelativeSpeeds(
+                  translation.getX(), translation.getY(), rotation, currentHeading));
+    } else {
+      swerveModuleStates =
+          swerveKinematics.toSwerveModuleStates(
+              new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
+    }
     double maxSpeed = jsonSwerve.moduleSpeedLimits.maxSpeed;
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxSpeed);
     applyModuleStates(swerveModuleStates, isOpenLoop);
@@ -447,27 +451,31 @@ public class SwerveDrive extends SubsystemBase implements SysidCompatibleSwerve,
    *
    * @param translation
    * @param rotation
-   * @param fieldRelative
    * @param isOpenLoop
+   * @param currentHeading
+   * @param currentPose
    */
   public void drive2ndOrder(
       Translation2d translation,
       double rotation,
-      boolean fieldRelative,
       boolean isOpenLoop,
       Rotation2d currentHeading,
       Pose2d currentPose) {
-    ChassisSpeeds desiredChassisSpeeds =
-        fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                translation.getX(),
-                translation.getY(),
-                rotation,
-                currentPose
-                    .getRotation()
-                    .plus(
-                        Rotation2d.fromDegrees(team.get() == DriverStation.Alliance.Red ? 180 : 0)))
-            : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+    ChassisSpeeds desiredChassisSpeeds;
+    if (fieldCentric) {
+      desiredChassisSpeeds =
+          ChassisSpeeds.fromFieldRelativeSpeeds(
+              translation.getX(),
+              translation.getY(),
+              rotation,
+              currentPose
+                  .getRotation()
+                  .plus(
+                      Rotation2d.fromDegrees(team.get() == DriverStation.Alliance.Red ? 180 : 0)));
+    } else {
+      desiredChassisSpeeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+    }
+
     desiredChassisSpeeds = correctForDynamics(desiredChassisSpeeds);
     SwerveModuleState[] swerveModuleStates =
         swerveKinematics.toSwerveModuleStates(desiredChassisSpeeds);
@@ -615,11 +623,11 @@ public class SwerveDrive extends SubsystemBase implements SysidCompatibleSwerve,
           Timer.getFPGATimestamp(), getGyroYaw(), getModulePositions());
     } else if (gyro.getAccel() > 4) {
       state = OdometryStates.DISTRUST;
-      swerveDrivePoseEstimator.updateWithTimeAndDevs(
+      swerveDrivePoseEstimator.updateWithTime(
           Timer.getFPGATimestamp(), getGyroYaw(), getModulePositions());
     } else {
       state = OdometryStates.TRUST;
-      swerveDrivePoseEstimator.updateWithTimeAndDevs(
+      swerveDrivePoseEstimator.updateWithTime(
           Timer.getFPGATimestamp(), getGyroYaw(), getModulePositions());
     }
   }
@@ -724,9 +732,7 @@ public class SwerveDrive extends SubsystemBase implements SysidCompatibleSwerve,
    * @return
    */
   public Pose2d getPose() {
-    odometryLock.lock();
     Pose2d poseEstimation = swerveDrivePoseEstimator.getEstimatedPosition();
-    odometryLock.unlock();
     return poseEstimation;
   }
 
@@ -736,19 +742,19 @@ public class SwerveDrive extends SubsystemBase implements SysidCompatibleSwerve,
    * @param pose
    */
   public void setPose(Pose2d pose) {
-    odometryLock.lock();
     swerveDrivePoseEstimator.resetPosition(getGyroYaw(), getModulePositions(), pose);
-    odometryLock.unlock();
     swerveKinematics.toSwerveModuleStates(
         ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, getGyroYaw()));
   }
 
   /** Zeros the heading of the swerve based on the gyro */
   public void zeroHeading() {
-    odometryLock.lock();
     swerveDrivePoseEstimator.resetPosition(getGyroYaw(), getModulePositions(), getPose());
-    odometryLock.unlock();
     swerveKinematics.toSwerveModuleStates(
         ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, getGyroYaw()));
+  }
+
+  public void setFieldCentric() {
+    fieldCentric = fieldCentric ? false : true;
   }
 }

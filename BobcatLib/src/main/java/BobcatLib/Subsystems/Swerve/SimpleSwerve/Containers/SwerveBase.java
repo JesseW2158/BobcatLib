@@ -7,7 +7,6 @@ import BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.Utility.PIDConstan
 import BobcatLib.Subsystems.Swerve.SimpleSwerve.SwerveDrive;
 import BobcatLib.Subsystems.Swerve.SimpleSwerve.Utility.Alliance;
 import BobcatLib.Subsystems.Swerve.Utility.LoadablePathPlannerAuto;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -72,18 +71,13 @@ public class SwerveBase {
   public void initComand() {
     DoubleSupplier translation = () -> s_Controls.getLeftYValue();
     DoubleSupplier strafe = () -> s_Controls.getLeftXValue();
+    DoubleSupplier rotate = () -> s_Controls.getRightXValue();
     if (!alliance.isBlueAlliance()) {
       translation = () -> -s_Controls.getLeftYValue();
       strafe = () -> -s_Controls.getLeftXValue();
     }
     s_Swerve.setDefaultCommand(
-        new TeleopSwerve(
-            s_Swerve,
-            translation,
-            strafe,
-            () -> s_Controls.getRightXValue(),
-            () -> s_Controls.robotCentric.getAsBoolean(),
-            s_Controls.controllerJson));
+        new TeleopSwerve(s_Swerve, translation, strafe, rotate, s_Controls.controllerJson));
   }
 
   public boolean autoChooserInitialized() {
@@ -126,20 +120,9 @@ public class SwerveBase {
     Command zeroGyro = Commands.runOnce(s_Swerve::zeroHeading);
     /* Driver Buttons */
     s_Controls.zeroGyro.onTrue(zeroGyro);
-    // Cardinal Modes
-    double maxSpeed = s_Swerve.jsonSwerve.chassisSpeedLimits.maxSpeed;
-    Command strafeBack =
-        s_Swerve.driveAsCommand(new Translation2d(-1, 0).times(maxSpeed)).repeatedly();
-    Command strafeForward =
-        s_Swerve.driveAsCommand(new Translation2d(1, 0).times(maxSpeed)).repeatedly();
-    Command strafeLeft =
-        s_Swerve.driveAsCommand(new Translation2d(0, 1).times(maxSpeed)).repeatedly();
-    Command strafeRight =
-        s_Swerve.driveAsCommand(new Translation2d(0, -1).times(maxSpeed)).repeatedly();
-    s_Controls.dpadForwardBtn.whileTrue(strafeForward);
-    s_Controls.dpadBackBtn.whileTrue(strafeBack);
-    s_Controls.dpadRightBtn.whileTrue(strafeRight);
-    s_Controls.dpadLeftBtn.whileTrue(strafeLeft);
+
+    Command setFieldCentric = Commands.runOnce(s_Swerve::setFieldCentric);
+    s_Controls.fieldCentric.toggleOnTrue(setFieldCentric);
   }
 
   /**
@@ -165,23 +148,17 @@ public class SwerveBase {
    */
   public Command getTestCommand() {
     Command testSwerveForward =
-        new ControlledSwerve(s_Swerve, 0.2, 0.0, 0.0, false, s_Controls.controllerJson)
-            .withTimeout(3);
+        new ControlledSwerve(s_Swerve, 0.2, 0.0, 0.0, s_Controls.controllerJson).withTimeout(3);
     Command testSwerveRight =
-        new ControlledSwerve(s_Swerve, 0.0, 0.2, 0.0, false, s_Controls.controllerJson)
-            .withTimeout(3);
+        new ControlledSwerve(s_Swerve, 0.0, 0.2, 0.0, s_Controls.controllerJson).withTimeout(3);
     Command testSwerveBackwards =
-        new ControlledSwerve(s_Swerve, -0.2, 0.0, 0.0, false, s_Controls.controllerJson)
-            .withTimeout(3);
+        new ControlledSwerve(s_Swerve, -0.2, 0.0, 0.0, s_Controls.controllerJson).withTimeout(3);
     Command testSwerveLeft =
-        new ControlledSwerve(s_Swerve, 0.0, -0.2, 0.0, false, s_Controls.controllerJson)
-            .withTimeout(3);
+        new ControlledSwerve(s_Swerve, 0.0, -0.2, 0.0, s_Controls.controllerJson).withTimeout(3);
     Command testRIPCW =
-        new ControlledSwerve(s_Swerve, 0.0, 0.0, 0.2, false, s_Controls.controllerJson)
-            .withTimeout(3);
+        new ControlledSwerve(s_Swerve, 0.0, 0.0, 0.2, s_Controls.controllerJson).withTimeout(3);
     Command testRIPCCW =
-        new ControlledSwerve(s_Swerve, 0.0, 0.0, -0.2, false, s_Controls.controllerJson)
-            .withTimeout(3);
+        new ControlledSwerve(s_Swerve, 0.0, 0.0, -0.2, s_Controls.controllerJson).withTimeout(3);
     Command stopMotorsCmd = new InstantCommand(() -> s_Swerve.stopMotors());
     Command testCommand =
         testSwerveForward
@@ -192,5 +169,9 @@ public class SwerveBase {
             .andThen(testRIPCCW)
             .andThen(stopMotorsCmd);
     return testCommand;
+  }
+
+  public void setFieldCentric() {
+    s_Swerve.setFieldCentric();
   }
 }

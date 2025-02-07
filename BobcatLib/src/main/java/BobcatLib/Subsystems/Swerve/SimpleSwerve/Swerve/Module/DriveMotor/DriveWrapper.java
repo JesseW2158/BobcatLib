@@ -4,6 +4,9 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 /** Drive Wrapper */
 public interface DriveWrapper {
+
+  public default void updateOutputs() {}
+
   /**
    * gets the velocity of the drive motor in rotations per second either using percentage output (
    * dutycycleout ) or velocity control triggered by the isOpenLoop parameter

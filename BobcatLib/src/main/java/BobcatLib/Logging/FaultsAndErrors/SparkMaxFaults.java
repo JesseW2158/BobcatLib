@@ -2,6 +2,7 @@ package BobcatLib.Logging.FaultsAndErrors;
 
 import BobcatLib.Logging.Alert;
 import BobcatLib.Logging.Alert.AlertType;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * Handles fault management for SparkMax motor controllers. Provides functionality for creating and
@@ -83,5 +84,17 @@ public class SparkMaxFaults implements FaultsWrapper {
    */
   public void disableAlert(Alert alert) {
     alert.set(false);
+  }
+
+  /**
+   * logs the state and returns the alert state.
+   *
+   * @param key which represents the advantage scope key that is being written too.
+   * @param value from getting if the hardware has an error.
+   * @return the logged state.
+   */
+  public boolean LogError(String key, boolean value) {
+    Logger.recordOutput("Alerts/SparkMax/" + id + "/" + key, value);
+    return value;
   }
 }

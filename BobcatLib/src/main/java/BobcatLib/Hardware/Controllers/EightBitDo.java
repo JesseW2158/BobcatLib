@@ -162,4 +162,8 @@ public class EightBitDo implements ControllerWrapper {
   public Trigger getDPadTriggerRight() {
     return ebdJoystick.povRight();
   }
+
+  public Trigger getTopButton() {
+    return new Trigger(() -> false);
+  }
 }

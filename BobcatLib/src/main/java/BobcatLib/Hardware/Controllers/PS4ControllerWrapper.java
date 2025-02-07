@@ -162,4 +162,8 @@ public class PS4ControllerWrapper extends CommandPS4Controller implements Contro
   public Trigger getDPadTriggerRight() {
     return super.povRight();
   }
+
+  public Trigger getTopButton() {
+    return new Trigger(() -> false);
+  }
 }

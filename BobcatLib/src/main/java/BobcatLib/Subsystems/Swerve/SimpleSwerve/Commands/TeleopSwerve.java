@@ -27,8 +27,8 @@ public class TeleopSwerve extends Command {
   /** Supplier for rotation control. */
   private DoubleSupplier rotationSup;
 
-  /** Supplier for enabling robot-centric control. */
-  private BooleanSupplier robotCentricSup;
+  /** Supplier for enabling field-centric control. */
+  private BooleanSupplier fieldCentricSup;
 
   /** Configuration details parsed from a JSON controller configuration. */
   private ControllerJson controllerJson;
@@ -40,7 +40,6 @@ public class TeleopSwerve extends Command {
    * @param translationSup supplier for translation (forward/backward) control
    * @param strafeSup supplier for strafing (side-to-side) control
    * @param rotationSup supplier for rotational control
-   * @param robotCentricSup supplier indicating if the drive should be robot-centric
    * @param controllerJson parsed configuration details for driver input and limits
    */
   public TeleopSwerve(
@@ -48,7 +47,6 @@ public class TeleopSwerve extends Command {
       DoubleSupplier translationSup,
       DoubleSupplier strafeSup,
       DoubleSupplier rotationSup,
-      BooleanSupplier robotCentricSup,
       ControllerJson controllerJson) {
     this.s_Swerve = s_Swerve;
     addRequirements(s_Swerve);
@@ -56,7 +54,6 @@ public class TeleopSwerve extends Command {
     this.translationSup = translationSup;
     this.strafeSup = strafeSup;
     this.rotationSup = rotationSup;
-    this.robotCentricSup = robotCentricSup;
     this.controllerJson = controllerJson;
   }
 
@@ -66,10 +63,19 @@ public class TeleopSwerve extends Command {
    */
   @Override
   public void execute() {
-    // Apply deadband to control inputs
-    Axis translation = new Axis(translationSup.getAsDouble(), controllerJson.driver.deadband);
-    Axis strafe = new Axis(strafeSup.getAsDouble(), controllerJson.driver.deadband);
-    Axis rotation = new Axis(rotationSup.getAsDouble(), controllerJson.driver.deadband);
+    Axis translation;
+    Axis strafe;
+    Axis rotation;
+
+    if (controllerJson.isDual) {
+      translation = new Axis(translationSup.getAsDouble(), controllerJson.single.deadband);
+      strafe = new Axis(strafeSup.getAsDouble(), controllerJson.single.deadband);
+      rotation = new Axis(rotationSup.getAsDouble(), controllerJson.split_one.deadband);
+    } else {
+      translation = new Axis(translationSup.getAsDouble(), controllerJson.single.deadband);
+      strafe = new Axis(strafeSup.getAsDouble(), controllerJson.single.deadband);
+      rotation = new Axis(rotationSup.getAsDouble(), controllerJson.single.deadband);
+    }
 
     // Retrieve drive limits from the swerve configuration
     double maxSpeed = s_Swerve.jsonSwerve.moduleSpeedLimits.maxSpeed;
@@ -79,7 +85,6 @@ public class TeleopSwerve extends Command {
     s_Swerve.drive(
         new Translation2d(translation.getDeadband(), strafe.getDeadband()).times(maxSpeed),
         rotation.getDeadband() * maxAngularVelocity,
-        !robotCentricSup.getAsBoolean(), // Whether field-centric mode is active
         true, // Always apply safety mechanisms
         s_Swerve.getHeading(),
         s_Swerve.getPose());
@@ -91,7 +96,12 @@ public class TeleopSwerve extends Command {
    * @return the processed value of the rotation stick
    */
   public double getRotationStick() {
-    Axis rotation = new Axis(rotationSup.getAsDouble(), controllerJson.driver.deadband);
+    Axis rotation;
+    if (controllerJson.isDual) {
+      rotation = new Axis(rotationSup.getAsDouble(), controllerJson.split_one.deadband);
+    } else {
+      rotation = new Axis(rotationSup.getAsDouble(), controllerJson.single.deadband);
+    }
     return rotation.getDeadband();
   }
 }

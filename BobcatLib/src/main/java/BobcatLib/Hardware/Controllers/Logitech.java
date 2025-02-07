@@ -162,4 +162,8 @@ public class Logitech implements ControllerWrapper {
   public Trigger getDPadTriggerRight() {
     return logitechJoystick.povRight();
   }
+
+  public Trigger getTopButton() {
+    return new Trigger(() -> false);
+  }
 }

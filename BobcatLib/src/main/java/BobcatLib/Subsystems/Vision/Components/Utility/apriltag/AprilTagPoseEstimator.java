@@ -120,7 +120,7 @@ public class AprilTagPoseEstimator {
    * Iteration [2] is used to refine this estimate. Then [3] is used to find a potential second
    * local minima and Orthogonal Iteration is used to refine this second estimate.
    *
-   * <p>[1]: E. Olson, “Apriltag: A robust and flexible visual fiducial system,” in 2011 IEEE
+   * <p>[1]: E. Olson, Apriltag: A robust and flexible visual fiducial system, in 2011 IEEE
    * International Conference on Robotics and Automation, May 2011, pp. 3400–3407.
    *
    * <p>[2]: Lu, G. D. Hager and E. Mjolsness, "Fast and globally convergent pose estimation from

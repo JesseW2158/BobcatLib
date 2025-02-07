@@ -162,4 +162,8 @@ public class PS5ControllerWrapper extends CommandPS5Controller implements Contro
   public Trigger getDPadTriggerRight() {
     return super.povRight();
   }
+
+  public Trigger getTopButton() {
+    return new Trigger(() -> false);
+  }
 }

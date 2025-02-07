@@ -4,13 +4,16 @@ import BobcatLib.Logging.Alert;
 import BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.Utility.ModuleConstants;
 import BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.parser.ModuleLimitsJson;
 import BobcatLib.Subsystems.Swerve.SimpleSwerve.Utility.math.Conversions;
+import BobcatLib.Utilities.CANDeviceDetails;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import org.littletonrobotics.junction.Logger;
 
 public class KrakenDriveMotor implements DriveWrapper {
   private TalonFX mDriveMotor;
@@ -30,9 +33,15 @@ public class KrakenDriveMotor implements DriveWrapper {
 
   public ModuleConstants chosenModule;
   public ModuleLimitsJson limits;
+  public CANDeviceDetails details;
 
   public KrakenDriveMotor(
-      int id, ModuleConstants chosenModule, String canivorename, ModuleLimitsJson limits) {
+      CANDeviceDetails details,
+      int id,
+      ModuleConstants chosenModule,
+      String canivorename,
+      ModuleLimitsJson limits) {
+    this.details = details;
     if (id >= 40) {
       canIdWarning.set(true);
     }
@@ -51,6 +60,34 @@ public class KrakenDriveMotor implements DriveWrapper {
     configDriveMotor();
     mDriveMotor.getConfigurator().apply(swerveDriveFXConfig);
     mDriveMotor.getConfigurator().setPosition(0.0);
+  }
+
+  /** Updates the Motor Outputs */
+  public void updateOutputs() {
+    Logger.recordOutput(
+        details.getSubsysemName()
+            + "/"
+            + details.getBus()
+            + "/"
+            + details.getDeviceNumber()
+            + "/Drive/MotorVoltage",
+        getMotorVoltage());
+    Logger.recordOutput(
+        details.getSubsysemName()
+            + "/"
+            + details.getBus()
+            + "/"
+            + details.getDeviceNumber()
+            + "/Drive/RelativePosition",
+        Rotation2d.fromRotations(getPosition()));
+    Logger.recordOutput(
+        details.getSubsysemName()
+            + "/"
+            + details.getBus()
+            + "/"
+            + details.getDeviceNumber()
+            + "/Drive/Velocity",
+        getVelocity());
   }
 
   public void configDriveMotor() {

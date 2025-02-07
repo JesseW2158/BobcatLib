@@ -6,8 +6,6 @@ package frc.robot;
 
 import java.util.List;
 
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-
 import BobcatLib.Hardware.Controllers.OI;
 import BobcatLib.Subsystems.Swerve.SimpleSwerve.Containers.SwerveBase;
 import BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.Utility.PIDConstants;

@@ -1,6 +1,10 @@
 package BobcatLib.Hardware.Controllers.parser;
 /** Controller Json */
 public class ControllerJson {
-  /** Driver Json */
-  public DriverJson driver;
+  /** Single Json */
+  public DriverJson single = new DriverJson();
+  /** Split One Json */
+  public DriverJson split_one = new DriverJson();
+
+  public boolean isDual = false;
 }

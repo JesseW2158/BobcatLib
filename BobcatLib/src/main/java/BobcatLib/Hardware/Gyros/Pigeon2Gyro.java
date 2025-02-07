@@ -28,6 +28,7 @@ public class Pigeon2Gyro implements GyroIO {
   public StringSubscriber configSubscriber;
   public String lastConfig = "{}";
   public GyroJson jsonGyro = new GyroJson();
+  public String robotName;
 
   /**
    * Constructs a Pigeon2Gyro instance with the specified CAN device details and enables the gyro.
@@ -35,7 +36,8 @@ public class Pigeon2Gyro implements GyroIO {
    * @param details The details of the CAN device, including the device number and CAN bus.
    * @param enableGyro Whether to enable the gyro functionality.
    */
-  public Pigeon2Gyro(CANDeviceDetails details, boolean enableGyro) {
+  public Pigeon2Gyro(String robotName, CANDeviceDetails details, boolean enableGyro) {
+    this.robotName = robotName;
     jsonGyro.imu = new GyroDeviceJson(details.getDeviceNumber(), details.getBus());
     jsonGyro.enable = enableGyro;
     configGyro();
@@ -45,7 +47,8 @@ public class Pigeon2Gyro implements GyroIO {
    * Default constructor that loads the gyro configuration from a file and applies the
    * configuration.
    */
-  public Pigeon2Gyro() {
+  public Pigeon2Gyro(String robotName) {
+    this.robotName = robotName;
     loadConfigurationFromFile();
     configGyro();
   }
@@ -70,7 +73,7 @@ public class Pigeon2Gyro implements GyroIO {
   public GyroJson loadConfigurationFromFile() {
     File deployDirectory = Filesystem.getDeployDirectory();
     assert deployDirectory.exists();
-    File directory = new File(deployDirectory, "configs/swerve");
+    File directory = new File(deployDirectory, "configs/swerve/" + robotName + "/");
     assert new File(directory, "gyro.json").exists();
     File gyroFile = new File(directory, "gyro.json");
     assert gyroFile.exists();
@@ -78,7 +81,7 @@ public class Pigeon2Gyro implements GyroIO {
     try {
       jsonGyro = new ObjectMapper().readValue(gyroFile, GyroJson.class);
     } catch (IOException e) {
-      jsonGyro.imu = new GyroDeviceJson(35, "");
+      jsonGyro.imu = new GyroDeviceJson(1, "");
     }
     return jsonGyro;
   }

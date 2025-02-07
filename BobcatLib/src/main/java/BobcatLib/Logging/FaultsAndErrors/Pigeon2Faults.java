@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * Manages and monitors faults for the Pigeon2 IMU device. This class provides alerts for various
@@ -128,25 +129,33 @@ public class Pigeon2Faults implements FaultsWrapper {
     List<Alert> foundFaults = new ArrayList<>();
     Map<BooleanSupplier, Alert> faultChecks =
         Map.of(
-            imu.getFault_BootDuringEnable()::getValue,
+            () -> LogError("BootDuringEnableAlert", imu.getFault_BootDuringEnable().getValue()),
             BootDuringEnableAlert,
-            imu.getFault_SaturatedAccelerometer()::getValue,
+            () ->
+                LogError(
+                    "SaturatedAccelerometerAlert",
+                    imu.getFault_SaturatedAccelerometer().getValue()),
             SaturatedAccelerometerAlert,
-            imu.getFault_SaturatedMagnetometer()::getValue,
+            () ->
+                LogError(
+                    "SaturatedMagnetometerAlert", imu.getFault_SaturatedMagnetometer().getValue()),
             SaturatedMagnetometerAlert,
-            imu.getFault_SaturatedGyroscope()::getValue,
+            () -> LogError("SaturatedGyroScopeAlert", imu.getFault_SaturatedGyroscope().getValue()),
             SaturatedGyroScopeAlert,
-            imu.getFault_LoopTimeSlow()::getValue,
+            () -> LogError("LoopTimeSlowFaultAlert", imu.getFault_LoopTimeSlow().getValue()),
             LoopTimeSlowFaultAlert,
-            imu.getFault_DataAcquiredLate()::getValue,
+            () ->
+                LogError("DataAcquiredLateFaultAlert", imu.getFault_DataAcquiredLate().getValue()),
             DataAcquiredLateFaultAlert,
-            imu.getFault_BootIntoMotion()::getValue,
+            () -> LogError("BootIntoMotionFaultAlert", imu.getFault_BootIntoMotion().getValue()),
             BootIntoMotionFaultAlert,
-            imu.getFault_BootupMagnetometer()::getValue,
+            () ->
+                LogError(
+                    "BootupMagnetometerFaultAlert", imu.getFault_BootupMagnetometer().getValue()),
             BootupMagnetometerFaultAlert,
-            imu.getFault_Undervoltage()::getValue,
+            () -> LogError("UndervoltageFaultAlert", imu.getFault_Undervoltage().getValue()),
             UndervoltageFaultAlert,
-            imu.getFault_Hardware()::getValue,
+            () -> LogError("HardwareAlert", imu.getFault_Hardware().getValue()),
             HardwareAlert);
 
     faultChecks.forEach(
@@ -159,5 +168,17 @@ public class Pigeon2Faults implements FaultsWrapper {
     foundFaults.forEach(this::activateAlert);
 
     return !foundFaults.isEmpty();
+  }
+
+  /**
+   * logs the state and returns the alert state.
+   *
+   * @param key which represents the advantage scope key that is being written too.
+   * @param value from getting if the hardware has an error.
+   * @return the logged state.
+   */
+  public boolean LogError(String key, boolean value) {
+    Logger.recordOutput("Alerts/Pigeon2/" + id + "/" + key, value);
+    return value;
   }
 }

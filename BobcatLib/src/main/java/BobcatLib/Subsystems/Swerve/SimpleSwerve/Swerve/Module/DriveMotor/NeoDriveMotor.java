@@ -3,6 +3,7 @@ package BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.DriveMotor;
 import BobcatLib.Logging.Alert;
 import BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.Utility.ModuleConstants;
 import BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.parser.ModuleLimitsJson;
+import BobcatLib.Utilities.CANDeviceDetails;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -15,7 +16,9 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import org.littletonrobotics.junction.Logger;
 
 public class NeoDriveMotor implements DriveWrapper {
   private SparkMax motor;
@@ -34,8 +37,11 @@ public class NeoDriveMotor implements DriveWrapper {
   private SparkMaxConfig motorConfig;
 
   private SparkClosedLoopController closedLoopController;
+  public CANDeviceDetails details;
 
-  public NeoDriveMotor(int id, ModuleConstants chosenModule, ModuleLimitsJson limits) {
+  public NeoDriveMotor(
+      CANDeviceDetails details, int id, ModuleConstants chosenModule, ModuleLimitsJson limits) {
+    this.details = details;
     if (id >= 40) {
       canIdWarning.set(true);
     }
@@ -51,6 +57,34 @@ public class NeoDriveMotor implements DriveWrapper {
     configDriveMotor();
     motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
     encoder.setPosition(0.0);
+  }
+
+  /** Updates the Motor Outputs */
+  public void updateOutputs() {
+    Logger.recordOutput(
+        details.getSubsysemName()
+            + "/"
+            + details.getBus()
+            + "/"
+            + details.getDeviceNumber()
+            + "/Drive/MotorVoltage",
+        getMotorVoltage());
+    Logger.recordOutput(
+        details.getSubsysemName()
+            + "/"
+            + details.getBus()
+            + "/"
+            + details.getDeviceNumber()
+            + "/Drive/RelativePosition",
+        Rotation2d.fromRotations(getPosition()));
+    Logger.recordOutput(
+        details.getSubsysemName()
+            + "/"
+            + details.getBus()
+            + "/"
+            + details.getDeviceNumber()
+            + "/Drive/Velocity",
+        getVelocity());
   }
 
   public void configDriveMotor() {

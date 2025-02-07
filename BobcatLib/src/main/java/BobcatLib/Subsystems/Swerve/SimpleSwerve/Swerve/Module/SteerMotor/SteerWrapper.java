@@ -2,6 +2,9 @@ package BobcatLib.Subsystems.Swerve.SimpleSwerve.Swerve.Module.SteerMotor;
 
 /** Steer Wrapper */
 public interface SteerWrapper {
+
+  public default void updateOutputs() {}
+
   /*
    *
    * sets the angle of the motor by setting the internal pid.

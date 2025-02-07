@@ -137,4 +137,8 @@ public interface ControllerWrapper {
   public default Trigger getDPadTriggerRight() {
     return null;
   }
+
+  public default Trigger getTopButton() {
+    return null;
+  }
 }

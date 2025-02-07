@@ -74,7 +74,7 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="CanCoderFaults.html" title="class in BobcatLib.Logging.FaultsAndErrors">CanCoderFaults</a></code>, <code><a href="CANdleFaultsWrapper.html" title="class in BobcatLib.Logging.FaultsAndErrors">CANdleFaultsWrapper</a></code>, <code><a href="Pigeon2Faults.html" title="class in BobcatLib.Logging.FaultsAndErrors">Pigeon2Faults</a></code>, <code><a href="RobotFaults.html" title="class in BobcatLib.Logging.FaultsAndErrors">RobotFaults</a></code>, <code><a href="SparkMaxFaults.html" title="class in BobcatLib.Logging.FaultsAndErrors">SparkMaxFaults</a></code>, <code><a href="TalonFXFaults.html" title="class in BobcatLib.Logging.FaultsAndErrors">TalonFXFaults</a></code></dd>
+<dd><code><a href="BoronFaults.html" title="class in BobcatLib.Logging.FaultsAndErrors">BoronFaults</a></code>, <code><a href="CanCoderFaults.html" title="class in BobcatLib.Logging.FaultsAndErrors">CanCoderFaults</a></code>, <code><a href="CANdleFaultsWrapper.html" title="class in BobcatLib.Logging.FaultsAndErrors">CANdleFaultsWrapper</a></code>, <code><a href="FalconFaults.html" title="class in BobcatLib.Logging.FaultsAndErrors">FalconFaults</a></code>, <code><a href="KrakenFaults.html" title="class in BobcatLib.Logging.FaultsAndErrors">KrakenFaults</a></code>, <code><a href="Pigeon2Faults.html" title="class in BobcatLib.Logging.FaultsAndErrors">Pigeon2Faults</a></code>, <code><a href="RobotFaults.html" title="class in BobcatLib.Logging.FaultsAndErrors">RobotFaults</a></code>, <code><a href="SparkMaxFaults.html" title="class in BobcatLib.Logging.FaultsAndErrors">SparkMaxFaults</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">FaultsWrapper</span></div>
@@ -114,6 +114,12 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#hasFaultOccured()" class="member-name-link">hasFaultOccured</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
 <div class="block">Checks if any fault conditions have been detected.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#LogError(java.lang.String,boolean)" class="member-name-link">LogError</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
+ boolean&nbsp;value)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">logs the state and returns the alert state.</div>
 </div>
 </div>
 </div>
@@ -172,6 +178,21 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd><code>true</code> if at least one fault is detected; otherwise, <code>false</code>.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="LogError(java.lang.String,boolean)">
+<h3>LogError</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">LogError</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
+ boolean&nbsp;value)</span></div>
+<div class="block">logs the state and returns the alert state.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>key</code> - which represents the advantage scope key that is being written too.</dd>
+<dd><code>value</code> - from getting if the hardware has an error.</dd>
+<dt>Returns:</dt>
+<dd>the logged state.</dd>
 </dl>
 </section>
 </li>

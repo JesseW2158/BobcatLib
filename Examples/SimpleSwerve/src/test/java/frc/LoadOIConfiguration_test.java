@@ -35,7 +35,7 @@ public class LoadOIConfiguration_test {
         try {
             s_Controller = new OI("robotName");
             assertNotNull(s_Controller.controllerJson);
-            assertNotNull(s_Controller.controllerJson.driver);
+            assertNotNull(s_Controller.controllerJson.single);
         } catch (Exception e) {
             assertNotNull(e.toString());
         }

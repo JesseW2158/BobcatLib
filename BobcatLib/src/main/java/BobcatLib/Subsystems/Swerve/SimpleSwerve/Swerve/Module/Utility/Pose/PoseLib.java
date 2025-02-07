@@ -13,7 +13,6 @@ public interface PoseLib {
   public default Pose2d getEstimatedPosition() {
     return new Pose2d();
   }
-  ;
 
   /**
    * Resets the robot's position on the field.

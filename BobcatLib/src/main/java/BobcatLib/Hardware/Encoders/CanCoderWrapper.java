@@ -5,6 +5,8 @@ import BobcatLib.Logging.FaultsAndErrors.CanCoderFaults;
 import BobcatLib.Utilities.CANDeviceDetails;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
+import edu.wpi.first.math.geometry.Rotation2d;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * A wrapper class for managing a CANcoder device, implementing the {@link EncoderIO} interface.
@@ -71,6 +73,40 @@ public class CanCoderWrapper implements EncoderIO {
   }
 
   /**
+   * Updates the Encoder inputs.
+   *
+   * @param inputs The EncoderIOInputs object to populate with motor data.
+   */
+  public void updateInputs(EncoderIOInputs inputs) {
+    inputs.getEncoderPosition = Rotation2d.fromRotations(getAbsolutePosition());
+    inputs.faulted = faults.hasFaultOccured();
+    Logger.recordOutput(
+        details.getSubsysemName()
+            + "/"
+            + details.getBus()
+            + "/"
+            + details.getDeviceNumber()
+            + "/IsProLicensed",
+        encoder.getIsProLicensed().getValue());
+    Logger.recordOutput(
+        details.getSubsysemName()
+            + "/"
+            + details.getBus()
+            + "/"
+            + details.getDeviceNumber()
+            + "/RelativePosition",
+        getRelativePosition());
+    Logger.recordOutput(
+        details.getSubsysemName()
+            + "/"
+            + details.getBus()
+            + "/"
+            + details.getDeviceNumber()
+            + "/AbsolutePosition",
+        inputs.getEncoderPosition);
+  }
+
+  /**
    * Configures the absolute encoder's sensor position and determines its inversion state. This
    * method initializes the encoder based on the chosen module's configuration.
    */
@@ -91,6 +127,17 @@ public class CanCoderWrapper implements EncoderIO {
     return encoder.getAbsolutePosition().getValueAsDouble();
   }
 
+  /**
+   * Retrieves the relative position of the encoder.
+   *
+   * @return The relative position of the encoder, as a rotation value Minimum Value: -16384.0
+   *     Maximum Value: 16383.999755859375
+   */
+  public Rotation2d getRelativePosition() {
+    Rotation2d relPosition = Rotation2d.fromRotations(encoder.getPosition().getValueAsDouble());
+    return relPosition;
+  }
+
   /** Resets the encoder to its factory default configuration. */
   public void factoryDefault() {
     encoder.getConfigurator().apply(new CANcoderConfiguration());
@@ -109,6 +156,6 @@ public class CanCoderWrapper implements EncoderIO {
    * CanCoderFaults} instance.
    */
   public void checkForFaults() {
-    faults.hasFaultOccured();
+    boolean isFaulted = faults.hasFaultOccured();
   }
 }

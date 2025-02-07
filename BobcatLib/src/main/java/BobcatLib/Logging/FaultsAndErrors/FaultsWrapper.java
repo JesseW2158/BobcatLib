@@ -39,4 +39,15 @@ public interface FaultsWrapper {
   public default boolean hasFaultOccured() {
     return false;
   }
+
+  /**
+   * logs the state and returns the alert state.
+   *
+   * @param key which represents the advantage scope key that is being written too.
+   * @param value from getting if the hardware has an error.
+   * @return the logged state.
+   */
+  public default boolean LogError(String key, boolean value) {
+    return false;
+  }
 }
