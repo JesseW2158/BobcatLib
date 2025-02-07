@@ -116,7 +116,7 @@ public class LimelightPoseEstimator {
      * @return Current {@link PoseEstimate}.
      */
     public Optional<PoseEstimate> get(LimelightCamera camera) {
-      if (poseEstimate.isEmpty()) {
+      if (poseEstimate != null) {
         PoseEstimate estimate = new PoseEstimate(camera, entry, isMegaTag2);
         poseEstimate = Optional.of(estimate);
       }
