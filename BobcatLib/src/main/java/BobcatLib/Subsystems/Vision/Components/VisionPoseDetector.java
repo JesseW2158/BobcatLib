@@ -12,9 +12,9 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.List;
 import java.util.Optional;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class VisionPoseDetector implements VisionIO {
 
@@ -107,7 +107,7 @@ public class VisionPoseDetector implements VisionIO {
         });
 
     SmartDashboard.putString("Test", "hi");
-    
+
     return visionEstimate.get();
   }
 

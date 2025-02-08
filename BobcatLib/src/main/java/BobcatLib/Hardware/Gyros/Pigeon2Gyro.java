@@ -1,7 +1,7 @@
 package BobcatLib.Hardware.Gyros;
 
-import BobcatLib.Hardware.Gyros.Parser.GyroDeviceJson;
-import BobcatLib.Hardware.Gyros.Parser.GyroJson;
+import BobcatLib.Hardware.Gyros.parser.GyroDeviceJson;
+import BobcatLib.Hardware.Gyros.parser.GyroJson;
 import BobcatLib.Logging.FaultsAndErrors.FaultsWrapper;
 import BobcatLib.Logging.FaultsAndErrors.Pigeon2Faults;
 import BobcatLib.Utilities.CANDeviceDetails;
